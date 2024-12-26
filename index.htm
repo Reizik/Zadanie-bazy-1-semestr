@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bazy danych</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            transition: all 0.7s ease;
+            height: 2000px; /* Zwiększamy wysokość strony dla przewijania */
+        }
+
+        header {
+            background: #0066cc;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 3px solid #004080;
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: bold;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: #333;
+
+            -webkit-background-clip: text;
+            color: white;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #1f2a38;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid #004080;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1.1rem;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        nav a:hover {
+            background: #004080;
+            color: white;
+            border-radius: 5px;
+        }
+
+        section {
+            padding: 3rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #004080;
+            margin-bottom: 1rem;
+        }
+
+        p, ul {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0066cc;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #004080;
+            text-decoration: underline;
+        }
+	footer {
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(90deg, #0066cc, #004080);
+            color: white;
+            padding: 20px 10px;
+            text-align: center;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        footer .icon {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        footer .icon:hover {
+            transform: scale(1.2);
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        footer span {
+            font-weight: bold;
+        }
+
+        #autor {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+            }
+
+            nav a {
+                margin-bottom: 0.5rem;
+            }
+
+            section {
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Bazy danych - 1 Semestr </h1>
+    </header>
+    <nav>
+        <a href="#" onclick="showSection('architektura')">Architektura Baz Danych</a>
+        <a href="#" onclick="showSection('tajemnica')">Tajemnica Zawodowa</a>
+        <a href="#" onclick="showSection('integralnosc')">Modele Danych i Integralność</a>
+        <a href="#" onclick="showSection('diagram_uc')">Diagram UC</a>
+        <a href="#" onclick="showSection('typy_zwiazkow')">Typy Związków</a>
+        <a href="#" onclick="showSection('szbd')">Funkcje SZBD</a>
+        <a href="#" onclick="showSection('normalizacja')">Normalizacja</a>
+        <a href="#" onclick="showSection('diagram_erd')">Diagram ERD</a>
+        <a href="#" onclick="showSection('serwery')">Sieciowe Serwery</a>
+        <a href="#" onclick="showSection('tabele')">Tabele Baz Danych</a>
+        <a href="#" onclick="showSection('zasady')">Zasady Projektowania</a>
+    </nav>
+    <section id="architektura" class="active">
+        <h2 class="section-header">Architektura systemu baz danych</h2>
+        <p>System baz danych (<span class="highlight">DBMS</span>) jest strukturą przechowującą dane, zarządzającą nimi oraz udostępniającą je aplikacjom za pomocą odpowiednich narzędzi i języków, z których najczęściej używanym jest <span class="highlight">SQL</span>. Jego głównym celem jest umożliwienie przechowywania, manipulowania i bezpiecznego dostępu do danych. Architektura systemu baz danych obejmuje nie tylko same dane, ale również sprzęt, oprogramowanie, język komunikacji oraz użytkowników, którzy z systemu korzystają.</p>
+
+        <p>Systemy baz danych wykorzystywane są w różnych aplikacjach, takich jak strony internetowe, aplikacje mobilne, czy systemy ERP. Komunikacja z bazą danych najczęściej odbywa się przez aplikacje, które wysyłają zapytania <span class="highlight">SQL</span> do systemu zarządzania bazą danych (<span class="highlight">DBMS</span>).</p>
+
+        <h2 class="subheader">Rodzaje systemów baz danych</h2>
+        <p>Wyróżniamy różne architektury systemów baz danych, które różnią się od siebie zarówno sposobem przechowywania danych, jak i interakcją z użytkownikami. Można je podzielić na:</p>
+
+        <h4 class="subheader">Architektura wg standardu ANSI/SPARC</h4>
+        <p>Jest to najbardziej popularny model architektury systemu baz danych, który obejmuje trzy poziomy:</p>
+        <ul>
+            <li><span class="highlight">Poziom wewnętrzny (fizyczny)</span> – związany z fizycznym przechowywaniem danych i sposobem dostępu do nich. Przykładowo, dane mogą być przechowywane na jednym komputerze lub rozproszonym systemie chmurowym.</li>
+            <li><span class="highlight">Poziom zewnętrzny (użytkownika)</span> – odpowiada za to, jak dane są prezentowane użytkownikom. Na tym poziomie dostęp do danych jest ograniczany w zależności od uprawnień.</li>
+            <li><span class="highlight">Poziom pojęciowy (koncepcyjny)</span> – opisuje strukturę bazy danych oraz relacje między danymi.</li>
+        </ul>
+
+        <h4 class="subheader">Architektura komunikacyjna</h4>
+        <p>Odnosi się do sposobu komunikacji między klientem a systemem baz danych. Wyróżniamy:</p>
+        <ul>
+            <li><span class="highlight">Architekturę jednowarstwową</span> – baza danych, system zarządzania i interfejs użytkownika znajdują się na tym samym urządzeniu.</li>
+            <li><span class="highlight">Architekturę dwuwarstwową</span> – klient i serwer są rozdzieleni, a baza danych jest dostępna poprzez aplikację.</li>
+            <li><span class="highlight">Architekturę trójwarstwową</span> – pomiędzy użytkownikiem a bazą danych znajduje się serwer aplikacji, który przetwarza dane przed ich wysłaniem do klienta.</li>
+        </ul>
+
+        <h2 class="subheader">Przykłady programów baz danych</h2>
+        <ul>
+            <li><span class="highlight">MySQL</span> – popularny system baz danych, często używany w aplikacjach internetowych.</li>
+            <li><span class="highlight">PostgreSQL</span> – zaawansowany system SQL, stosowany w dużych aplikacjach.</li>
+            <li><span class="highlight">Microsoft SQL Server</span> – komercyjny system baz danych, wykorzystywany głównie w przedsiębiorstwach.</li>
+            <li><span class="highlight">MongoDB</span> – system NoSQL, przechowujący dane w formie dokumentów JSON, używany w aplikacjach wymagających elastyczności.</li>
+            <li><span class="highlight">SQLite</span> – lekka baza danych, używana w aplikacjach mobilnych i desktopowych.</li>
+        </ul>
+
+        <h2 class="subheader">Narzędzia do zarządzania bazami danych</h2>
+        <ul>
+            <li><span class="highlight">phpMyAdmin</span> – narzędzie webowe do zarządzania MySQL.</li>
+            <li><span class="highlight">pgAdmin</span> – interfejs do PostgreSQL.</li>
+            <li><span class="highlight">SQL Server Management Studio (SSMS)</span> – narzędzie do zarządzania SQL Server.</li>
+        </ul>
+
+        <h2 class="subheader">Przykłady aplikacji wykorzystujących bazy danych</h2>
+        <ul>
+            <li><span class="highlight">WordPress</span> – CMS wykorzystujący MySQL.</li>
+            <li><span class="highlight">Shopify</span> – platforma e-commerce, stosująca bazy danych SQL.</li>
+            <li><span class="highlight">Slack</span> – aplikacja komunikacyjna z rozproszonymi bazami danych.</li>
+        </ul>
+
+        <h2 class="section-header">Podsumowanie</h2>
+        <p>Systemy baz danych są kluczowe w dzisiejszych aplikacjach, umożliwiając przechowywanie i zarządzanie danymi. Ich architektura jest złożona, obejmując różne poziomy zarządzania i komunikacji. W zależności od potrzeb aplikacji, wybór odpowiedniego systemu baz danych i narzędzi zarządzających jest kluczowy dla zapewnienia efektywności i bezpieczeństwa przechowywanych danych.</p>
+    </section>
+    <section id="tajemnica">
+        <h2><strong>Tajemnica Zawodowa, Przestępstwa Gospodarcze i Nieuczciwa Konkurencja</strong></h2>
+
+    <p><strong>Tajemnica zawodowa</strong> to informacja pozyskana w wyniku wykonywania zawodu, której ujawnienie jest zabronione. Zgodnie z literaturą przedmiotu, tajemnica zawodowa obejmuje zarówno informacje dotyczące życia prywatnego osób, jak i te związane z funkcjonowaniem organizacji. Przykłady zawodów objętych tajemnicą zawodową to lekarze, dziennikarze, radcy prawni, psycholodzy, farmaceuci czy żołnierze. Tajemnica ta ma na celu ochronę interesów jednostek i organizacji, a jej ujawnienie może prowadzić do poważnych konsekwencji prawnych, w tym kar grzywny lub pozbawienia wolności. W wyjątkowych przypadkach sąd może zwolnić z obowiązku jej dochowania.</p>
+
+    <h2>Przestępstwa Patentowe</h2>
+    <p><strong>Przestępstwa patentowe</strong> dotyczą naruszenia praw do wynalazków i wzorów użytkowych. Do najczęstszych przestępstw w tej kategorii należy:</p>
+    <ul>
+        <li><strong>Plagiat wynalazczy</strong>: przypisanie sobie autorstwa cudzego wynalazku.</li>
+        <li><strong>Ujawnienie wynalazku</strong>: bez zgody autora, co może uniemożliwić uzyskanie ochrony patentowej, gdy wynalazek traci cechę nowości.</li>
+        <li><strong>Zgłoszenie cudzego wynalazku do ochrony</strong>: uznawane za „podszywanie się” pod twórcę. Sprawcy tych przestępstw, zwłaszcza gdy działają w celu uzyskania korzyści majątkowych, mogą liczyć na surowsze kary.</li>
+    </ul>
+
+    <h2>Przestępstwa Przeciwko Znakom Towarowym</h2>
+    <p><strong>Przestępstwa przeciwko znakom towarowym</strong> dotyczą naruszenia prawa do znaków towarowych. Polegają na:</p>
+    <ul>
+        <li><strong>Podrobieniu znaków towarowych</strong>: używanie identycznych lub myląco podobnych znaków towarowych, które mogą wprowadzać w błąd konsumentów.</li>
+        <li><strong>Obrocie towarami z podrobionymi znakami</strong>: zarówno produkcja, jak i sprzedaż towarów oznaczonych nieautoryzowanymi znakami towarowymi są zabronione i karane.</li>
+    </ul>
+
+    <h2>Nieuczciwa Konkurencja</h2>
+    <p><strong>Nieuczciwa konkurencja</strong> to działanie sprzeczne z prawem lub dobrymi obyczajami, które zagraża interesom innych przedsiębiorców lub klientów. Zgodnie z ustawą o zwalczaniu nieuczciwej konkurencji, takie czynności obejmują m.in.:</p>
+    <ul>
+        <li><strong>Ujawnienie tajemnicy służbowej lub zawodowej</strong>: jest to jedno z działań, które może stanowić czyn nieuczciwej konkurencji, gdy wpływa na konkurencyjność firmy lub przedsiębiorcy.</li>
+        <li><strong>Inne działania w celu wprowadzenia w błąd konsumentów</strong>: działania, które mogą szkodzić rynkowej uczciwości i naruszać zasady konkurencji.</li>
+    </ul>
+    </section>
+    <section id="integralnosc">
+
+    <h2>Modele danych</h2>
+    <p><strong>Model danych</strong> to zbiór zasad, które określają strukturę, powiązania, operacje oraz reguły integralności danych w systemie bazodanowym. Model ten jest próbą reprezentacji rzeczywistego świata i jego obiektów oraz relacji między nimi. Składa się z trzech komponentów:</p>
+    <ul>
+        <li><strong>Część strukturalna</strong> – zawiera zasady określające budowę bazy danych.</li>
+        <li><strong>Część manipulacyjna</strong> – określa operacje aktualizacji, pobierania i zmiany struktury danych.</li>
+        <li><strong>Część integralnościowa</strong> – zapewnia stabilność działania systemu.</li>
+    </ul>
+
+    <h2>Rodzaje modeli danych</h2>
+
+    <h3><strong>Model jednorodny</strong></h3>
+    <ul>
+        <li>Wszystkie dane są przechowywane w jednym arkuszu, tabeli lub pliku.</li>
+        <li><strong>Zalety</strong>: Łatwość w odczytywaniu danych, np. wystarczy znaleźć jeden rekord, aby poznać szczegóły operacji.</li>
+        <li><strong>Wady</strong>: Duplikowanie danych (np. nazwa dostawcy, adres), co wymaga więcej miejsca na dysku i utrudnia aktualizację danych (np. zmiana adresu dostawcy).</li>
+    </ul>
+
+    <h3><strong>Hierarchiczny model danych</strong></h3>
+    <ul>
+        <li>Początki sięgają lat 60. XX w., związane z projektami IDS i MIS (np. w NASA).</li>
+        <li>Struktura przypomina drzewo: jeden korzeń (tabela nadrzędna) i wiele dzieci (tabele podrzędne).</li>
+        <li><strong>Zalety</strong>: Dobre dla danych o strukturze "jeden do wielu".</li>
+        <li><strong>Wady</strong>: Brak elastyczności (np. brak relacji wiele do wielu, trudności w modyfikacjach).</li>
+    </ul>
+
+    <h3><strong>Sieciowy model danych</strong></h3>
+    <ul>
+        <li>Rozwinięcie modelu hierarchicznego, w którym dane są reprezentowane w postaci grafu.</li>
+        <li>Możliwość współdzielenia gałęzi między różnymi drzewami, co zwiększa elastyczność w modelowaniu danych.</li>
+    </ul>
+
+    <h3><strong>Obiektowy model danych</strong></h3>
+    <ul>
+        <li>Łączy cechy programowania obiektowego i baz danych.</li>
+        <li>Dane przechowywane są w obiektach (połączonych danych i procedur), które zawierają atrybuty oraz metody.</li>
+        <li>Korzysta z obiektowego języka zapytań (OQL, JDOQL).</li>
+        <li>Obiekty mają tożsamość (unikalny identyfikator) i mogą być modyfikowane tylko poprzez interfejsy.</li>
+    </ul>
+
+    <h3><strong>Relacyjny model danych</strong>s</h3>
+    <ul>
+        <li>Opiera się na dwóch dziedzinach matematycznych: teorii mnogości i rachunku predykatów I-rzędu.</li>
+        <li>Dane przechowywane są w tabelach (relacjach) z wierszami (krotkami) i kolumnami (atrybutami).</li>
+        <li>System zarządzania bazą danych (DBMS) umożliwia manipulację danymi za pomocą języka SQL.</li>
+        <li><strong>Postulaty Codda</strong>: 12 zasad, które muszą być spełnione przez system relacyjny, np. integralność danych, niezależność danych, modyfikowalność danych.</li>
+    </ul>
+
+    <h2>Integralność danych</h2>
+    <p><strong>Integralność danych</strong> to zapewnienie, że dane w systemie bazodanowym są poprawne, spójne i bezpieczne. Podstawowe zasady integralności to:</p>
+    <ul>
+        <li><strong>Integralność semantyczna</strong> – dane muszą odpowiadać wymaganym typom (np. tylko liczby całkowite w kolumnie "wiek").</li>
+        <li><strong>Integralność encji</strong> – każda tabela powinna mieć klucz główny, a wartości w tej kolumnie nie mogą być NULL.</li>
+        <li><strong>Integralność referencyjna</strong> – zachowanie powiązań między tabelami za pomocą kluczy obcych. Klucz obcy w jednej tabeli odnosi się do klucza głównego w innej tabeli.</li>
+        <li><strong>Integralność dynamiczna</strong> – więzy odnoszące się do zmiany stanu danych w bazie. Na przykład, wiek pracownika nie może maleć z biegiem czasu.</li>
+        <li><strong>Integralność statyczna</strong> – dotyczy bieżącego stanu bazy danych i narzucanych ograniczeń, np. wartość wieku nie może być większa niż 200.</li>
+    </ul>
+
+    <h2>Ograniczenia integralności</h2>
+    <ul>
+        <li><strong>Ograniczenia statyczne</strong> – odnoszą się do bieżącego stanu bazy danych, np. CHECK (wiek &lt; 200).</li>
+        <li><strong>Ograniczenia dynamiczne</strong> – dotyczą zmian w bazie danych w czasie, np. wiek pracownika nie może się zmniejszyć.</li>
+    </ul>
+
+    <h2>Podstawowe zasady integralności danych</h2>
+    <ul>
+        <li>Zachowanie poprawności bazy danych (poprawność semantyczna, encji i referencyjna).</li>
+        <li>Gwarancja, że dane nie zostaną zmienione w nieautoryzowany sposób.</li>
+        <li>Utrzymanie bezpieczeństwa danych w przypadku awarii (np. awaria sprzętu, błędy logiczne).</li>
+    </ul>
+
+    <h2>Spójność danych</h2>
+    <p>Dane muszą odzwierciedlać rzeczywistość i być aktualizowane w momencie zmiany tej rzeczywistości. Ochrona integralności danych obejmuje m.in. mechanizmy kontrolujące dane wejściowe oraz systemy kopii zapasowych.</p>
+
+    <h2>Przykłady</h2>
+    <ul>
+        <li><strong>Integralność encji</strong>: W przypadku tabeli uczniów w dzienniku szkolnym, klucz główny to numer indeksu ucznia, który nie może być NULL i musi być unikalny.</li>
+    </ul>
+    </section>
+    <section id="diagram_uc">
+
+        <h2>Inżynieria Oprogramowania i Diagram Przypadków Użycia</h2>
+        <p>Inżynieria oprogramowania to dziedzina zajmująca się tworzeniem oprogramowania, od analizy wymagań po wdrożenie i ewolucję systemów. Zajmuje się praktycznymi aspektami produkcji oprogramowania, a jej celem jest stworzenie efektywnych i niezawodnych rozwiązań informatycznych.</p>
+
+        <h2>Diagram Przypadków Użycia:</h2>
+        <p><span class="bold">Diagram przypadków użycia</span> (ang. <i>use case diagram</i>) jest jednym z podstawowych narzędzi wykorzystywanych w inżynierii oprogramowania. Służy do graficznego przedstawiania funkcjonalności systemu oraz interakcji z jego otoczeniem. Ukazuje usługi systemu, widziane z perspektywy użytkowników.</p>
+
+        <h2>Elementy Diagramu Przypadków Użycia:</h2>
+        <p><span class="bold">Przypadek użycia (Use Case):</span></p>
+        <ul>
+            <li>Zbiór scenariuszy realizujących wspólny cel użytkownika.</li>
+            <li>Reprezentuje wymagania funkcjonalne systemu, bez informowania o wewnętrznej strukturze.</li>
+            <li>Każdy przypadek użycia może być opisany przez: nazwę, opis, przepływ zdarzeń (scenariusze), zależności, diagramy aktywności, wymagania specjalne, warunki wstępne i końcowe.</li>
+        </ul>
+
+        <p><span class="bold">Aktor:</span></p>
+        <ul>
+            <li>Reprezentuje rolę, jaką pełni użytkownik w systemie. Może to być człowiek, urządzenie lub inny system.</li>
+            <li>Aktor nie jest częścią systemu, ale wchodzi w interakcję z nim, wykonując określone zadania.</li>
+        </ul>
+
+        <h2>Relacje między przypadkami użycia:</h2>
+        <p><span class="bold">Związek zawierania (Include):</span> Jednym przypadkiem użycia można rozszerzyć funkcjonalność innego.</p>
+        <p><span class="bold">Związek rozszerzenia (Extend):</span> Przypadek użycia opcjonalnie rozszerza funkcjonalność innego przypadku.</p>
+
+        <h2>Aktor i Asocjacja:</h2>
+        <p>Aktor wchodzi w interakcję z systemem poprzez powiązanie z przypadkiem użycia. Asocjacja jest często skierowana, wskazując, kto inicjuje usługę.</p>
+
+        <h2>Przykład diagramu przypadków użycia:</h2>
+        <p><span class="bold">Aktorzy:</span></p>
+        <ul>
+            <li><span class="bold">Klient Niezalogowany:</span> Osoba przeglądająca ofertę produktów.</li>
+            <li><span class="bold">Klient Zalogowany:</span> Osoba posiadająca konto w systemie.</li>
+            <li><span class="bold">Raz na Dzień:</span> Procedura uruchamiana codziennie, sprawdzająca poziom magazynowy.</li>
+        </ul>
+
+        <p><span class="bold">Przypadki użycia:</span></p>
+        <ul>
+            <li><span class="bold">Przeglądanie produktów:</span> Klient Niezalogowany może przeglądać ofertę produktów.</li>
+            <li><span class="bold">Rezerwacja samochodu:</span> Klient Zalogowany dokonuje rezerwacji.</li>
+            <li><span class="bold">Zarządzanie stanem magazynowym:</span> Procedura "Raz na Dzień" sprawdza poziom produktów w magazynie i wysyła e-mail o niskim stanie.</li>
+        </ul>
+
+        <h2>Korzyści z diagramu przypadków użycia:</h2>
+        <ul>
+            <li>Ułatwia komunikację w zespole projektowym.</li>
+            <li>Pomaga w weryfikacji wymagań i postępów projektu.</li>
+            <li>Stanowi fundament dla dalszego projektowania systemu.</li>
+        </ul>
+        <p>Wykorzystanie diagramu przypadków użycia pozwala na graficzną reprezentację wymagań systemu i jego interakcji z użytkownikami oraz innymi systemami, co jest kluczowe dla skutecznej realizacji projektu oprogramowania.</p>
+    </section>
+    <section id="typy_zwiazkow">
+
+    <h2>Typy Związków w Bazach Danych</h2>
+    <p><strong>Związki pomiędzy tabelami bazy danych</strong> są kluczowe dla organizacji danych w systemach relacyjnych. Dzięki tym związkom, tabele mogą być logicznie połączone, co umożliwia tworzenie zapytań oraz analizę informacji. Oto najważniejsze typy związków:</p>
+
+    <h3>1. Relacja „jeden do jednego” (1:1)</h3>
+    <p><strong>Relacja „jeden do jednego”</strong> oznacza, że każdy rekord w jednej tabeli ma dokładnie jeden odpowiadający rekord w drugiej tabeli i vice versa. Jest to rzadko stosowany typ relacji, ale może być przydatny w przypadkach, gdy chcemy przechowywać dane w dwóch tabelach w celu optymalizacji dostępu lub zapewnienia bezpieczeństwa danych.</p>
+    <p>Typowe zastosowania:</p>
+    <ul>
+        <li><strong>Tabele słownikowe:</strong> przechowują określony zbiór wartości, np. nazwy ocen.</li>
+        <li><strong>Optymalizacja zapytań:</strong> rozbicie tabeli na dwie mniejsze w celu lepszego dostępu do danych.</li>
+    </ul>
+
+    <h4>Przykład:</h4>
+    <p>Tabela „uczeń” (tabela mocna) i tabela „uczeń_s” (tabela słaba).</p>
+
+    <h2>2. Relacja „jeden do wielu” (1:∞)</h2>
+    <p><strong>Relacja „jeden do wielu”</strong> oznacza, że jeden rekord w jednej tabeli może mieć wiele odpowiadających mu rekordów w drugiej tabeli. Jest to najczęściej spotykany typ relacji w relacyjnych bazach danych.</p>
+
+    <h3>Przykład:</h3>
+    <p>Tabela „produkt” ma wiele zamówień w tabeli „zamówienia”.</p>
+
+    <h2>3. Relacja „wiele do wielu” (∞:∞)</h2>
+    <p><strong>Relacja „wiele do wielu”</strong> występuje, gdy każdy rekord w jednej tabeli może być powiązany z wieloma rekordami w drugiej tabeli. W tym przypadku konieczne jest stworzenie <strong>tabeli łącznikowej</strong>.</p>
+
+    <h3>Przykład:</h3>
+    <p>Relacja między tabelą „produkt” a tabelą „klient”, gdzie tabela „zamówienia” pełni rolę tabeli łącznikowej.</p>
+
+    <h2>Typy relacji i przykłady zastosowań</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Typ relacji</th>
+                <th>Przykład zastosowania</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1:1</strong></td>
+                <td>Tabela „pracownik” i tabela „miasta” (tabela słownikowa)</td>
+            </tr>
+            <tr>
+                <td><strong>1:∞</strong></td>
+                <td>Tabela „produkt” i tabela „zamówienia”</td>
+            </tr>
+            <tr>
+                <td><strong>∞:∞</strong></td>
+                <td>Tabela „produkt” i tabela „klient” (tabela łącznikowa: „zamówienia”)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Opcjonalność i Wymagalność</h2>
+    <p>W bazach danych opcjonalność (może) i wymagany (musi) są ważnymi cechami określającymi, czy dany rekord w jednej tabeli może lub musi być powiązany z rekordem w drugiej tabeli. Przykłady:</p>
+    <ul>
+        <li><strong>Opcjonalność:</strong> Relacja, w której rekord w jednej tabeli może, ale nie musi, być powiązany z rekordem w drugiej tabeli (np. klient może mieć więcej niż jedno zamówienie, ale nie musi mieć żadnego).</li>
+        <li><strong>Wymagalność:</strong> Relacja, w której rekord w jednej tabeli musi mieć odpowiadający rekord w drugiej tabeli (np. każdy produkt musi być przypisany do przynajmniej jednego zamówienia).</li>
+    </ul>
+    </section>
+    <section id="szbd">
+        <h2>Funkcje Systemu Zarządzania Bazą Danych (SZBD)</h2>
+
+    <p>System Zarządzania Bazą Danych (SZBD) to oprogramowanie, które umożliwia tworzenie, zarządzanie oraz przetwarzanie danych w bazach danych. SZBD działa jako warstwa pośrednicząca między użytkownikami a bazą danych.</p>
+
+    <h2>Podstawowe funkcje SZBD</h2>
+    <ul>
+        <li><strong>Tworzenie struktur baz danych</strong> - definiowanie tabel, relacji, kluczy.</li>
+        <li><strong>Operacje CRUD</strong> - tworzenie, odczyt, aktualizacja i usuwanie danych.</li>
+        <li><strong>Obsługa zapytań</strong> - umożliwia selekcjonowanie i przetwarzanie danych.</li>
+        <li><strong>Generowanie raportów</strong> - tworzenie zestawień i raportów na podstawie danych.</li>
+        <li><strong>Administracja bazą danych</strong> - zarządzanie strukturą i użytkownikami bazy.</li>
+    </ul>
+
+    <h2>Dodatkowe funkcje SZBD</h2>
+    <ul>
+        <li><strong>Optymalizacja zapytań</strong> - minimalizowanie czasu oczekiwania na odpowiedź z bazy danych.</li>
+        <li><strong>Integralność danych</strong> - zapewnienie, że dane nie znajdą się w nieprawidłowym stanie.</li>
+        <li><strong>Zarządzanie współbieżnym dostępem</strong> - zapewnienie, że wielu użytkowników może korzystać z bazy danych jednocześnie, bez konfliktów.</li>
+        <li><strong>Odporność na awarie</strong> - możliwość odzyskania danych po awarii.</li>
+        <li><strong>Ochrona danych</strong> - zabezpieczenie przed nieautoryzowanym dostępem do wrażliwych informacji.</li>
+    </ul>
+
+    <h2>Charakterystyka elementów baz danych</h2>
+    <p><strong>Encja</strong> to obiekt lub rzecz, o której musimy przechowywać informacje (np. klient, produkt). Graficznie reprezentowana jest jako prostokąt w diagramie ERD (Entity-Relationship Diagram).</p>
+
+    <p><strong>Krotka (tuple)</strong> to pojedynczy wiersz w tabeli, który zawiera dane dla różnych atrybutów. Krotka przechowuje stałe wartości, których typów nie można zmieniać w kolejnych rekordach.</p>
+
+    <h3>Atrybuty ENCJI</h3>
+    <p>Atrybut to właściwość encji, np. dla encji "klient" atrybuty mogą obejmować imię, nazwisko, numer telefonu. Atrybuty mogą mieć różne typy danych, takie jak tekst, liczby, wartości logiczne czy obrazy.</p>
+
+    <h3>Klucz główny (Primary Key)</h3>
+    <p><strong>Klucz główny</strong> to unikalny identyfikator krotek w tabeli, który zapewnia ich jednoznaczność. Cechy klucza głównego:</p>
+    <ul>
+        <li><strong>NOT NULL</strong> – nie może być pusty.</li>
+        <li><strong>UNIKALNY</strong> – nie może powtarzać się.</li>
+        <li><strong>Krótki</strong> – łatwy do zapamiętania i używania.</li>
+        <li><strong>Niezmienny w czasie</strong> – nie zmienia się w trakcie życia rekordu.</li>
+    </ul>
+
+    <h3>Rodzaje kluczy</h3>
+    <ul>
+        <li><strong>Klucz prosty</strong> – składa się z jednej kolumny.</li>
+        <li><strong>Klucz złożony</strong> – składa się z więcej niż jednej kolumny.</li>
+    </ul>
+
+    <h3>Klucz obcy (Foreign Key)</h3>
+    <p><strong>Klucz obcy</strong> jest kluczem z tabeli A, który odwołuje się do klucza głównego w tabeli B. Jest używany do łączenia tabel w bazie danych.</p>
+    </section>
+    <section id="normalizacja">
+        <h2>Normalizacja bazy danych</h2>
+    <p>Normalizacja bazy danych jest procesem, który ma na celu eliminację powtarzających się danych w relacyjnej bazie danych. Główna idea polega na trzymaniu danych w jednym miejscu, a w razie potrzeby linkowania do nich. Taki sposób tworzenia bazy danych zwiększa bezpieczeństwo danych i zmniejsza ryzyko powstania niespójności, szczególnie problemów anomalii.</p>
+
+    <h2>Postacie Normalne</h2>
+    <p>Istnieją sposoby ustalenia, czy dany schemat bazy danych jest „znormalizowany”, a jeśli tak, to jak bardzo. Jednym ze sposobów jest porównanie danej bazy do schematów zwanych postaciami normalnymi (ang. normal forms, NF). Normalizacja bazy danych do konkretnej postaci może wymagać rozbicia dużych tabel na mniejsze i ich ponownego łączenia przy każdym zapytaniu. Zmniejsza to wydajność, więc w niektórych przypadkach świadoma denormalizacja (stan bez normalizacji) jest lepsza, zwłaszcza w systemach niekorzystających z modelu relacyjnego (np. OLAP).</p>
+
+    <h2>Anomalie w Bazach Danych</h2>
+    <p>Anomalie w bazach danych mogą wystąpić, gdy dane są przechowywane w nieoptymalny sposób. Istnieją różne typy anomalii:</p>
+    <ul>
+        <li><strong>Redundancja</strong>: Ta sama informacja jest niepotrzebnie przechowywana w kilku krotkach.</li>
+        <li><strong>Anomalia modyfikacji</strong>: Zmiana informacji w niektórych krotkach, a w innych nie. Która informacja jest wtedy prawdziwa?</li>
+        <li><strong>Anomalia usuwania</strong>: Usuwanie części informacji powoduje utratę innych danych, które nie powinny zostać utracone.</li>
+        <li><strong>Anomalia dołączania</strong>: Wprowadzenie pewnych informacji jest możliwe tylko wtedy, gdy wprowadzimy inne dane, które mogą być niedostępne.</li>
+    </ul>
+
+    <h2>Postacie Normalne - Typy</h2>
+    <p>Edgar Frank Codd, twórca normalizacji, początkowo opracował trzy postacie normalne: 1NF, 2NF i 3NF. Obecnie istnieją także postacie 4NF, 5NF, a 6NF stosuje się w bazach uwzględniających wymiar czasowy. Najczęściej wykorzystywaną postacią jest 3NF, która jest wystarczająca dla większości projektów. Postacie 4NF i 5NF są rozszerzeniami, a 6NF dotyczy baz relacyjnych, które uwzględniają czas.</p>
+
+    <h2>Pierwsza Postać Normalna (1NF)</h2>
+    <p>Tabela jest w pierwszej postaci normalnej, jeśli:</p>
+    <ul>
+        <li>Wiersz przechowuje informacje o pojedynczym obiekcie.</li>
+        <li>Dane są atomowe, czyli nie zawierają kolekcji.</li>
+        <li>Zawiera klucz główny (kolumnę lub grupę kolumn jednoznacznie identyfikujących wiersz).</li>
+    </ul>
+    <p><strong>Zasady:</strong></p>
+    <ul>
+        <li>Wyeliminuj powtarzające się grupy w tabelach.</li>
+        <li>Stwórz osobne tabele dla zestawów powiązanych danych.</li>
+        <li>Zidentyfikuj te dane za pomocą klucza podstawowego.</li>
+    </ul>
+
+    <h2>Druga Postać Normalna (2NF)</h2>
+    <p>Jest już w pierwszej postaci normalnej i każdy atrybut niekluczowy jest w pełni funkcyjnie zależny od całego klucza głównego, a nie od jego części.</p>
+    <p><strong>Zasady:</strong></p>
+    <ul>
+        <li>Tworzenie osobnych tabel dla zestawów wartości dotyczących wielu rekordów.</li>
+        <li>Powiązanie tych tabel za pomocą klucza obcego.</li>
+    </ul>
+
+    <h2>Trzecia Postać Normalna (3NF)</h2>
+    <p>Jest w drugiej postaci normalnej i każdy atrybut niekluczowy jest bezpośrednio zależny od klucza głównego, a nie od innych atrybutów niekluczowych.</p>
+    <p><strong>Zasady:</strong></p>
+    <ul>
+        <li>Usunięcie kolumn, które są zależne pośrednio od klucza.</li>
+    </ul>
+
+
+
+    <h2>Skrócone Podsumowanie Normalizacji</h2>
+    <ul>
+        <li><strong>1NF</strong>: Pola muszą być atomowe, tabela nie może zawierać powtórzeń.</li>
+        <li><strong>2NF</strong>: Pola muszą zależeć od całego klucza.</li>
+        <li><strong>3NF</strong>: Pola niekluczowe muszą zależeć wyłącznie od klucza głównego.</li>
+    </ul>
+
+    <h2>Przysięga Normalizacji</h2>
+    <ul>
+        <li><strong>Bez powtórzeń</strong>: Unikamy redundancji danych, przechowując każdą informację w jednym miejscu.</li>
+        <li><strong>Pola zależą od klucza</strong>: Wszystkie atrybuty muszą zależeć od klucza głównego.</li>
+    </ul>
+    </section>
+    <section id="diagram_erd" class="active">
+       <h2>Atrybuty Encji</h2>
+    <p>Atrybuty encji to cechy, które charakteryzują daną encję i pozwalają na jej identyfikację. Każda encja posiada atrybuty, które przyjmują określone wartości, umożliwiające rozróżnienie encji od siebie.</p>
+
+    <h3>Przykład Atrybutów Encji:</h3>
+    <ul>
+        <li><strong>Student</strong>: Nazwisko, Imię, Rok Studiów, Nr Indeksu</li>
+        <li><strong>Sala</strong>: Numer, Rodzaj, Ilość Miejsc, Sprzęt</li>
+    </ul>
+
+    <h2>Typ Encji vs Instancja Encji</h2>
+    <p><strong>Typ Encji</strong>: To zbiór encji o tych samych atrybutach, np. „Studenci”.</p>
+    <p><strong>Instancja Encji</strong>: To konkretne wystąpienie encji w bazie danych, np.</p>
+    <ul>
+        <li><strong>Nazwisko</strong>: Kowalski, <strong>Imię</strong>: Jan, <strong>Rok Studiów</strong>: I, <strong>Nr Indeksu</strong>: R-10/03</li>
+        <li><strong>Nazwisko</strong>: Nowak, <strong>Imię</strong>: Anna, <strong>Rok Studiów</strong>: IV, <strong>Nr Indeksu</strong>: R-24/99</li>
+    </ul>
+
+    <h2>Związki Encji</h2>
+    <p>Związki między encjami określają ich wzajemne powiązania. W prostych modelach związki występują między dwoma encjami, ale mogą zachodzić również między więcej niż dwoma encjami.</p>
+    <p>Związki są nazywane czasownikami, np. „zawiera”, „posiada”.</p>
+    <p>Graficznie przedstawia się je jako romb łączący encje lub linię zakończoną symbolami oznaczającymi liczebność związku.</p>
+
+    <h3>Przykład Związku:</h3>
+    <p><strong>Student – Grupa</strong>: „Zawiera M” (Student może należeć do jednej grupy, a grupa może zawierać wielu studentów).</p>
+
+    <h2>Liczebność Związku Encji</h2>
+    <p>Liczebność związku określa liczbę instancji encji biorących udział w związku. Wyróżniamy trzy typy związków:</p>
+
+    <h3><strong>1. Jednojednoznaczny (1:1)</strong></h3>
+    <p>Każdej instancji pierwszej encji odpowiada dokładnie jedna instancja drugiej encji, i odwrotnie.</p>
+    <p><strong>Przykład</strong>: Każdy student ma dokładnie jeden numer indeksu, i każdy numer indeksu przypisany jest dokładnie jednemu studentowi.</p>
+
+    <h3><strong>2. Jednoznaczny (1:M)</strong></h3>
+    <p>Każdej instancji pierwszej encji odpowiada wiele instancji drugiej encji, ale każdej instancji drugiej encji odpowiada tylko jedna instancja pierwszej encji.</p>
+    <p><strong>Przykład</strong>: Jeden wykładowca może prowadzić wiele grup zajęciowych, ale każda grupa zajęciowa jest przypisana tylko do jednego wykładowcy.</p>
+
+    <h3><strong>3. Wieloznaczny (M:N)</strong></h3>
+    <p>Każdej instancji pierwszej encji odpowiada wiele instancji drugiej encji, a każdej instancji drugiej encji odpowiada wiele instancji pierwszej encji.</p>
+    <p><strong>Przykład</strong>: Studenci mogą zapisać się na wiele przedmiotów, a każdy przedmiot może być realizowany przez wielu studentów.</p>
+
+    <h2>Podsumowanie:</h2>
+    <ul>
+        <li><strong>Atrybuty encji</strong> to cechy, które identyfikują encję, np. „Imię”, „Nazwisko”, „Nr Indeksu”.</li>
+        <li><strong>Związki encji</strong> przedstawiają powiązania między encjami, np. „Student – Grupa”, „ZawieraM”.</li>
+        <li><strong>Liczebność związku</strong> precyzuje, jak wiele instancji encji uczestniczy w związku (1:1, 1:M, M:N).</li>
+    </ul>
+    </section>
+    <section id="serwery">
+        <h2>Sieciowe Serwery Baz Danych</h2>
+
+    <p>System Zarządzania Bazami Danych (SZBD, ang. DBMS) to zbiór narzędzi, które umożliwiają dostęp do danych i zarządzanie nimi. Składa się z dwóch głównych elementów:</p>
+    <ul>
+        <li><strong>Serwer</strong>: Przechowuje dane, umożliwia ich pobieranie, aktualizowanie oraz zapewnia ich integralność i bezpieczeństwo.</li>
+        <li><strong>Oprogramowanie pośredniczące</strong>: Realizuje komunikację między użytkownikiem a serwerem, umożliwiając korzystanie z danych (np. tworzenie formularzy i raportów).</li>
+    </ul>
+
+    <p><strong>Serwer bazodanowy</strong> to specjalistyczny komputer z oprogramowaniem, który zarządza i udostępnia dane wielu użytkownikom jednocześnie, np. dane dotyczące firmy i jej klientów.</p>
+
+    <h2>Tryb klient-serwer</h2>
+    <p>W większości systemów baz danych działa architektura klient-serwer, gdzie baza danych jest udostępniana klientom przez SZBD. Serwer bazy danych może udostępniać dane bezpośrednio lub przez inne serwery (np. serwer WWW).</p>
+
+    <h2>Systemy baz danych w architekturze klient-serwer:</h2>
+    <ul>
+        <li>Microsoft SQL Server</li>
+        <li>Oracle</li>
+        <li>DB2</li>
+        <li>Informix Dynamic Server</li>
+        <li>Firebird</li>
+        <li>MariaDB</li>
+        <li>MySQL</li>
+        <li>PostgreSQL</li>
+    </ul>
+
+    <h2>Bazy danych bez podziału na klienta i serwer:</h2>
+    <p>Niektóre bazy danych nie wymagają współdzielenia danych przez wielu użytkowników i nie rozróżniają podziału na klienta i serwer. Przykłady:</p>
+    <ul>
+        <li>Microsoft Access (SQL, korzysta z Microsoft Jet)</li>
+        <li>Kexi (SQL, korzysta z SQLite)</li>
+    </ul>
+    </section>
+    <section id="tabele">
+         <h2>Tabele Baz Danych – Iloczyn Kartezjański</h2>
+
+    <p><strong>Relacja</strong> w kontekście baz danych to tabela, której zawartość może ulegać zmianom. Aby zrozumieć ten termin, warto przypomnieć pojęcie <em>iloczynu kartezjańskiego</em> z matematyki. Iloczyn kartezjański dwóch zbiorów A i B tworzy zbiór C, w którym każdy element zbioru A jest połączony z każdym elementem zbioru B. Przykład:</p>
+    <ul>
+        <li>Zbiór A: cyfry</li>
+        <li>Zbiór B: imiona</li>
+    </ul>
+    <p>Iloczyn kartezjański zbiorów A i B daje zbiór C, który łączy każdą cyfrę z każdym imieniem (np. 1 – Jacek, 2 – Ewa).</p>
+
+    <h2>Relacja jako Tabela</h2>
+    <p>Relacja to podzbiór iloczynu kartezjańskiego. W bazach danych, tabela przechowuje dane, które mogą ulegać modyfikacjom (np. dodawanie nowych wierszy). Wartości w tabelach mogą być zmieniane w czasie, co czyni je zmiennymi.</p>
+
+    <h2>Terminologia: Relvar</h2>
+    <p>Chris Date, teoretyk baz danych, zaproponował nazwę <strong>relvar</strong> dla tabel w relacyjnych bazach danych, co podkreśla ich zmienność. Relvar pochodzi od słów "relation" (relacja) oraz "variable" (zmienna). To wyrażenie ma na celu zaznaczenie, że zawartość tabeli może się zmieniać w czasie.</p>
+
+    <h2>Związki między Tabelami</h2>
+    <p>W bazach danych termin "relacja" jest często używany do określenia tabeli, ale może również odnosić się do <em>związków</em> między tabelami (np. związek "jeden do wielu"). Przykład: relacja między tabelą A a tabelą B w przypadku relacji "jeden do wielu" może być myląca, ponieważ odnosi się do związków, a nie samej tabeli.</p>
+
+    <h2>Przykład Tabeli – Lista Reprezentantów Polski w Piłce Nożnej</h2>
+    <p>Oto przykład tabeli reprezentującej skład reprezentacji Polski:</p>
+    <table border="1">
+        <tr>
+            <th>Nr</th>
+            <th>Imię i Nazwisko</th>
+            <th>Data Urodzenia / Wiek</th>
+            <th>Występy</th>
+            <th>Gole</th>
+            <th>Klub</th>
+        </tr>
+        <tr>
+            <td>12</td>
+            <td>Grzegorz Sandomierski</td>
+            <td>5 września 1989 / 22 lata</td>
+            <td>3</td>
+            <td>0</td>
+            <td>Jagiellonia Białystok</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Wojciech Szczęsny</td>
+            <td>18 kwietnia 1990 / 22 lata</td>
+            <td>11</td>
+            <td>0</td>
+            <td>Arsenał F.C.</td>
+        </tr>
+        <tr>
+            <td>22</td>
+            <td>Przemysław Tytoń</td>
+            <td>4 stycznia 1987 / 25 lat</td>
+            <td>8</td>
+            <td>0</td>
+            <td>PSV Eindhoven</td>
+        </tr>
+    </table>
+    </section>
+    <section id="zasady">
+        <h2>Zasady projektowania baz danych</h2>
+
+  <p><strong>Projektowanie baz danych</strong> to proces, który można podzielić na kilka etapów, takich jak planowanie, tworzenie modelu konceptualnego, transformacja na model relacyjny, normalizacja bazy danych oraz wybór struktur dostępu do danych.</p>
+
+  <h2>Etapy projektowania bazy danych:</h2>
+  <ol>
+    <li><strong>Planowanie</strong> bazy danych – ustalenie celów, zakresu i wymagań projektu.</li>
+    <li><strong>Tworzenie modelu konceptualnego</strong> (np. diagram ERD) – modelowanie danych niezależne od implementacji.</li>
+    <li><strong>Transformacja na model relacyjny</strong> – przekształcanie modelu konceptualnego w konkretne tabele.</li>
+    <li><strong>Normalizacja</strong> bazy danych – proces organizowania danych w tabele, aby uniknąć redundancji.</li>
+    <li><strong>Wybór struktur i zasad dostępu</strong> – określenie metod dostępu i organizacji danych.</li>
+  </ol>
+
+  <h2>Rodzaje modelowania bazy danych:</h2>
+  <ul>
+    <li><strong>Modelowanie konceptualne</strong> – niezależne od technologii, bazuje na diagramach ERD (Entity-Relationship Diagram).</li>
+    <li><strong>Modelowanie logiczne</strong> – oparte na specyficznych modelach danych, jak model relacyjny, ale niezależne od BDMS (Systemu Zarządzania Bazą Danych).</li>
+    <li><strong>Modelowanie fizyczne</strong> – implementacja w pamięci zewnętrznej, zawierająca szczegóły dotyczące organizacji plików i indeksów.</li>
+  </ul>
+
+  <h2>Przykłady narzędzi:</h2>
+  <p>Do projektowania bazy danych można wykorzystać narzędzia CASE, takie jak <em>DBDesigner4</em>, które umożliwiają tworzenie modeli graficznych i wspomagają proces wytwarzania oprogramowania.</p>
+
+  <h3>Elementy diagramu ERD:</h3>
+  <p>Diagramy ERD składają się z trzech podstawowych elementów:</p>
+  <ul>
+    <li><strong>Encje</strong> – obiekty lub zdarzenia w systemie (np. Student, Kurs).</li>
+    <li><strong>Atrybuty</strong> – cechy charakterystyczne dla encji (np. Nazwisko, Imię, Rok studiów).</li>
+    <li><strong>Związki</strong> – powiązania między encjami (np. Student zapisuje się na Kurs).</li>
+  </ul>
+
+  <h2>Liczebność związków:</h2>
+  <ul>
+    <li><strong>1:1</strong> – Jeden do jednego: każdej instancji jednej encji odpowiada dokładnie jedna instancja drugiej encji.</li>
+    <li><strong>1:M</strong> – Jeden do wielu: jednej instancji pierwszej encji odpowiada wiele instancji drugiej encji.</li>
+    <li><strong>M:N</strong> – Wielu do wielu: wielu instancjom jednej encji odpowiada wiele instancji drugiej encji.</li>
+  </ul>
+
+  <h2>Normalizacja bazy danych:</h2>
+  <p>Normalizacja polega na eliminowaniu anomalii w bazie danych, dzieleniu tabel na mniejsze, bardziej zorganizowane tabele i redukcji redundancji. Etapy normalizacji obejmują dekompozycję do 3NF, BCNF oraz 4NF i 5NF.</p>
+
+  <h2>Wybór środowiska implementacji:</h2>
+  <p>Wybór odpowiedniego systemu zarządzania bazą danych (DBMS) zależy od wielu czynników, takich jak: przeznaczenie bazy, sposób użycia danych, liczba użytkowników, wymagania dotyczące bezpieczeństwa danych i dostępności.</p>
+    </section>
+
+<footer>
+	<div class="icon">🌐</div>
+	<div>Autor : <span> Szymon Murdza 3H</span></div>
+</footer>
+
+
+</body>
+</html>
